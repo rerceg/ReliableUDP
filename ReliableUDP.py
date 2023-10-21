@@ -262,7 +262,7 @@ class ReliableUDP:
             return False
         self._resend_segments_timer.cancel()
         self._resend_segments_timer = Timer(1, self._timer_says_resend_segments)
-        _, rAck_num, _, _, _ = self._unpack_data(data, addr)
+        seq_num, rAck_num, _, _, _ = self._unpack_data(data, addr)
         if self._last_received_ack == rAck_num:
             print(f"received double ack: {rAck_num}")
             self._next_segment = self._n_of_acked_segments
@@ -279,6 +279,7 @@ class ReliableUDP:
                 self._n_of_acked_segments += n_of_acked_segments_incr
                 self._last_received_ack = rAck_num
                 if rAck_num == self._seq_num:
+                    self._set_ack_num(seq_num)
                     return True
                 self._expected_acks = self._expected_acks[(i+1):]
                 self._connection_error_counter = 0
