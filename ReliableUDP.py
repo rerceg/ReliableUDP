@@ -265,7 +265,6 @@ class ReliableUDP:
         if self._last_received_ack == rAck_num:
             print(f"received double ack: {rAck_num}")
             self._next_segment = self._n_of_acked_segments
-            self._rWindow_size = self._mss + header_size
             self._congestion_window_factor = max(4, self._congestion_window_factor/2)
             self._slow_start_treshold = self._congestion_window_factor
             self._connection_error_counter = 0
