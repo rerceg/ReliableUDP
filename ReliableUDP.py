@@ -48,6 +48,7 @@ class ReliableUDP:
         self._slow_start_treshold = self._congestion_window_factor
         self._rWindow_size = self._congestion_window_factor * (self._mss + header_size)
         self._connection_error_counter += 1
+        self._expected_acks = []
         self._send_next_window()
         self._resolving_timer_callback_flag = False
 
