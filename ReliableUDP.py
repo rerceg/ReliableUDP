@@ -163,9 +163,7 @@ class ReliableUDP:
             return False
         return True
         
-    def _unpack_data(self, data, addr):
-        if addr != self.rAddr:
-            return [-1, -1, 0, None, None]
+    def _unpack_data(self, data):
         seq_num, ack_num, flags, window_size, options = self._parse_header(data)
         self._rWindow_size = window_size
         options_len = 0 if not options else len(options)
@@ -263,7 +261,7 @@ class ReliableUDP:
             return False
         self._resend_segments_timer.cancel()
         self._resend_segments_timer = Timer(1, self._timer_says_resend_segments)
-        seq_num, rAck_num, _, _, _ = self._unpack_data(data, addr)
+        seq_num, rAck_num, _, _, _ = self._unpack_data(data)
         if self._last_received_ack == rAck_num:
             print(f"received double ack: {rAck_num}")
             self._next_segment = self._n_of_acked_segments
@@ -361,7 +359,7 @@ class ReliableUDP:
 
             self._send_ack_timer.cancel()
             self._connection_error_counter = 0
-            seq_num, _, flags, _, payload = self._unpack_data(data, addr)
+            seq_num, _, flags, _, payload = self._unpack_data(data)
             if flags[1] == '1' and seq_num == self._ack_num:
                 return self._handle_last_segment_recv(payload, seq_num)
             elif flags[1] == '1' and seq_num != self._ack_num:
