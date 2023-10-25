@@ -129,7 +129,7 @@ class ReliableUDP:
         if ack_num != (self._seq_num + 1):
             return False
         self._rWindow_size = window_size
-        self._set_ack_num(seq_num + 1)
+        self._set_ack_num(seq_num)
         return True
 
     
