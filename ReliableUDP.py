@@ -129,7 +129,7 @@ class ReliableUDP:
         if ack_num != (self._seq_num + 1):
             return False
         self._rWindow_size = window_size
-        self._set_ack_num(seq_num)
+        self._set_ack_num(seq_num + 1)
         return True
 
     
@@ -214,6 +214,7 @@ class ReliableUDP:
             print("3rd shake recived")
             if self._third_shake_confirmation(data, addr):
                 print("connected")
+                self._increment_seq_num(1)
                 return (self, self.rAddr)
             else:
                 print("Connection failed")
